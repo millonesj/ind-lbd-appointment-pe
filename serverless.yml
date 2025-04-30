@@ -1,15 +1,19 @@
-service: appointment-pe
+service: ind-appointment-pe
 
 frameworkVersion: '4'
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-offline
 
 provider:
   name: aws
   runtime: nodejs20.x
   region: us-east-1
+  memorySize: 150
+  timeout: 15
   environment:
-    AWS_REGION: us-east-1
-    SQS_PE_URL:
-      Ref: SQSPEQueue
+    SQS_PE_URL: ${env:SQS_PE_URL}
     DB_HOST: ${env:DB_HOST}
     DB_PORT: ${env:DB_PORT}
     DB_USER: ${env:DB_USER}
@@ -26,35 +30,21 @@ provider:
         - logs:CreateLogGroup
         - logs:CreateLogStream
         - logs:PutLogEvents
-      Resource:
-        - Fn::GetAtt: [SQSPEQueue, Arn]
-        - arn:aws:logs:us-east-1:*:*
+      Resource: "*"
+
 
 functions:
-  processAppointmentPE:
-    handler: dist/serverless.handler
+  appointment_pe:
+    handler: dist/infraestructure/common/sqs/appointment-pe-handler.handler
     events:
       - sqs:
-          arn:
-            Fn::GetAtt: [SQSPEQueue, Arn]
+          arn: ${env:SQS_PE_ARN}
           batchSize: 10
           maximumBatchingWindow: 60
-
-resources:
-  Resources:
-    SQSPEQueue:
-      Type: AWS::SQS::Queue
-      Properties:
-        QueueName: SQS_PE
-        VisibilityTimeout: 30
-        MessageRetentionPeriod: 1209600
-        RedrivePolicy:
-          deadLetterTargetArn:
-            Fn::GetAtt: [SQSPEDeadLetterQueue, Arn]
-          maxReceiveCount: 5
-
-    SQSPEDeadLetterQueue:
-      Type: AWS::SQS::Queue
-      Properties:
-        QueueName: SQS_PE_DLQ
-        MessageRetentionPeriod: 1209600
+package:
+  individually: true
+  excludeDevDependencies: true
+  exclude:
+    - node_modules/@types/**
+    - node_modules/aws-sdk/**
+    - node_modules/typescript/**

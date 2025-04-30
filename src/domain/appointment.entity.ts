@@ -6,11 +6,10 @@ export type AppointmentStatus = 'pending' | 'completed' | 'failed';
 @Entity({
   name: 'appointment',
 })
-@Unique(['id'])
 export class Appointment extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   autoId: number;
-  
+
   @Column({ type: 'varchar' })
   id: string;
 
