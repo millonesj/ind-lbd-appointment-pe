@@ -21,6 +21,7 @@ provider:
     DB_DATABASE: ${env:DB_DATABASE}
     DB_LOGGING: ${env:DB_LOGGING}
     DB_SYNCHRONIZE: ${env:DB_SYNCHRONIZE}
+    EVENT_BUS_NAME: ${env:EVENT_BUS_NAME}
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -30,6 +31,8 @@ provider:
         - logs:CreateLogGroup
         - logs:CreateLogStream
         - logs:PutLogEvents
+        - dynamodb:UpdateItem
+        - events:PutEvents
       Resource: "*"
 
 

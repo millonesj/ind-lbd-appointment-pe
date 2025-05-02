@@ -7,6 +7,7 @@ import configuration from 'src/infraestructure/config/configuration';
 import { typeOrmConfig } from 'src/infraestructure/config/type-orm-config';
 import { DataSource } from 'typeorm';
 import { EventHandlerService } from './event-handler.service';
+import { EventBridgeService } from '../bus/event-bridge.service';
 
 @Module({
   imports: [
@@ -25,7 +26,12 @@ import { EventHandlerService } from './event-handler.service';
     }),
     TypeOrmModule.forFeature([Appointment]),
   ],
-  providers: [EventHandlerService, AppointmentService, Logger],
+  providers: [
+    EventHandlerService,
+    AppointmentService,
+    EventBridgeService,
+    Logger,
+  ],
 })
 export class SqsModule implements OnApplicationShutdown {
   private readonly logger = new Logger(SqsModule.name);
