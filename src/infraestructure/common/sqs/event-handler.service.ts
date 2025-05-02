@@ -19,9 +19,9 @@ export class EventHandlerService {
 
         const appointment = JSON.parse(payload['Message']) as Appointment;
 
-        const { autoId } = await this.appointmentService.create([appointment]);
+        const { id } = await this.appointmentService.create([appointment]);
 
-        return { autoId };
+        return { id };
       }
     } catch (error) {
       this.logger.error('EventHandlerService', error.message);

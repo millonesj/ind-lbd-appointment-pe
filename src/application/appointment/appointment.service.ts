@@ -20,9 +20,9 @@ export class AppointmentService extends BaseService<Appointment> {
         createAppointment,
       );
 
-      const autoId = responseAppointment?.[0]?.autoId;
-      this.logger.error('AppointmentService.create', autoId);
-      return { autoId };
+      const id = responseAppointment?.[0]?.id;
+      this.logger.error('AppointmentService.create', id);
+      return { id };
     } catch (error) {
       this.logger.error('AppointmentService.create', error.message);
     }

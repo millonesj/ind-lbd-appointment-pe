@@ -1,16 +1,11 @@
 import { BaseEntity } from 'src/infraestructure/common/base.entity';
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
-
-export type AppointmentStatus = 'pending' | 'completed' | 'failed';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({
   name: 'appointment',
 })
 export class Appointment extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  autoId: number;
-
-  @Column({ type: 'varchar' })
+  @PrimaryColumn({ type: 'uuid' })
   id: string;
 
   @Column({ type: 'varchar' })
@@ -18,16 +13,4 @@ export class Appointment extends BaseEntity {
 
   @Column({ type: 'int' })
   scheduleId: number;
-
-  @Column({ type: 'varchar' })
-  countryISO: 'PE' | 'CL';
-
-  @Column({ type: 'varchar', default: 'pending' })
-  status: AppointmentStatus;
-
-  @Column({ type: 'timestamp' })
-  createdAt: Date;
-
-  @Column({ type: 'timestamp' })
-  updatedAt: Date;
 }
